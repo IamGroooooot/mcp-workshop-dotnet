@@ -7,10 +7,6 @@ using McpTodoServer.ContainerApp.Services;
 // Build the application
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-
 // Create a shared SQLite connection for in-memory database
 // This connection must be kept open throughout the application lifecycle
 var connectionString = "Data Source=:memory:";
@@ -41,38 +37,15 @@ builder.Services.AddLogging(loggingBuilder =>
 });
 
 // Build the app
+builder.Services.AddMcpServer()
+                .WithHttpTransport(o => o.Stateless = true)
+                .WithToolsFromAssembly();
 var app = builder.Build();
 
 // Initialize the database
 await InitializeDatabaseAsync(app);
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
-
 app.UseHttpsRedirection();
-
-// Sample weather forecast endpoint (keeping as requested)
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
 
 // Demo endpoint to test todo functionality (not a full API implementation)
 app.MapGet("/todo-demo", async (ITodoService todoService) =>
@@ -110,6 +83,8 @@ app.MapGet("/todo-demo", async (ITodoService todoService) =>
 })
 .WithName("TodoDemo");
 
+app.MapMcp("/mcp");
+
 // Run the application
 app.Run();
 
@@ -137,9 +112,4 @@ static async Task InitializeDatabaseAsync(WebApplication app)
         logger.LogError(ex, "An error occurred while initializing the database");
         throw;
     }
-}
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
