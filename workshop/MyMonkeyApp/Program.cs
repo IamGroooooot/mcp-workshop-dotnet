@@ -45,14 +45,20 @@ class Program
         Console.WriteLine();
         
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("        🐵");
-        Console.WriteLine("       /   \\");
-        Console.WriteLine("      |  o o |");
-        Console.WriteLine("      |  ^   |");
-        Console.WriteLine("      | (_)  |");
-        Console.WriteLine("       \\___/");
-        Console.WriteLine("        | |");
-        Console.WriteLine("       /   \\");
+        Console.WriteLine("          🐵");
+        Console.WriteLine("         (o o)");
+        Console.WriteLine("    ooO--(_)--Ooo");
+        Console.WriteLine("   /             \\");
+        Console.WriteLine("  |  BANANA PLS!  |");
+        Console.WriteLine("   \\             /");
+        Console.WriteLine("    \\  \\_____/  /");
+        Console.WriteLine("     \\   ~~~   /");
+        Console.WriteLine("      |  \\o/  |");
+        Console.WriteLine("      |   |   |");
+        Console.WriteLine("     /|   |   |\\");
+        Console.WriteLine("    ( |   |   | )");
+        Console.WriteLine("   __|___|___|__");
+        Console.WriteLine("  (____________)");
         Console.ResetColor();
         Console.WriteLine();
     }
