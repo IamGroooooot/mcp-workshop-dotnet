@@ -12,9 +12,30 @@ builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
 
 var config = builder.Configuration;
-var token = config["GitHubModels:Token"] ?? throw new InvalidOperationException("Missing configuration: GitHubModels:Token.");
-var endpoint = config["GitHubModels:Endpoint"] ?? throw new InvalidOperationException("Missing configuration: GitHubModels:Endpoint.");
-var modelId = config["GitHubModels:ModelId"] ?? throw new InvalidOperationException("Missing configuration: GitHubModels:ModelId.");
+
+// Check for required configuration and provide helpful error messages
+var token = config["GitHubModels:Token"];
+var endpoint = config["GitHubModels:Endpoint"];
+var modelId = config["GitHubModels:ModelId"];
+
+if (string.IsNullOrEmpty(token))
+{
+    throw new InvalidOperationException(
+        "Missing configuration: GitHubModels:Token. " +
+        "Please set this value in user secrets using: " +
+        "dotnet user-secrets set \"GitHubModels:Token\" \"your-github-token-here\"");
+}
+
+if (string.IsNullOrEmpty(endpoint))
+{
+    throw new InvalidOperationException("Missing configuration: GitHubModels:Endpoint.");
+}
+
+if (string.IsNullOrEmpty(modelId))
+{
+    throw new InvalidOperationException("Missing configuration: GitHubModels:ModelId.");
+}
+
 var credential = new ApiKeyCredential(token);
 var options = new OpenAIClientOptions()
 {
